@@ -4,13 +4,126 @@ println("UW Homework: Simple Kotlin")
 
 // write a "whenFn" that takes an arg of type "Any" and returns a String
 
+fun whenFn(a: Any) = when(a) {
+    "Hello" -> "world"
+    is String -> "Say what?"
+    0 -> "zero"
+    1 -> "one"
+    in 2..10 -> "low number"
+    is Int -> "a number"
+    else -> "I don't understand"
+}
+
 // write an "add" function that takes two Ints, returns an Int, and adds the values
+fun add(a: Int, b: Int): Int {
+    return a + b
+}
+
 // write a "sub" function that takes two Ints, returns an Int, and subtracts the values
+fun sub(a: Int, b: Int): Int {
+    return a - b
+}
 // write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), returns an Int, and applies the passed-in-function to the arguments
+fun mathOp(a: Int,b: Int, func: (Int, Int) -> Int): Int {
+    val num = func(a, b)
+    return num
+}
 
 // write a class "Person" with first name, last name and age
 
+class Person(firstName: String, lastName: String, age:Int) {
+    var firstName = firstName
+    var lastName = lastName
+    var age = age
+
+    fun equals(o: Person): Boolean {
+        if (o == this) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result:Int = hashCode()
+        if (result == 0) {
+            result = 6
+            result = 31 * result + firstName.hashCode()
+            result = 31 * result + lastName.hashCode()
+            result = 31 * result + age
+        }
+        return result
+    }
+
+    private var _debugString: String? = null
+    public val debugString: String
+        get() {
+            if (_debugString == null) {
+                _debugString = "[Person firstName:$firstName lastName:$lastName age:$age]"
+            }
+            return _debugString ?: throw AssertionError("Set to null by another thread")
+        }
+
+}
+
 // write a class "Money"
+class Money(var amount: Int, var currency: String ="USD") {
+    init {
+        if (currency != "USD" && currency != "GBP" && currency != "EUR" && currency != "CAN") {
+            throw Exception("Currency is not valid")
+        }
+    }
+
+    public fun convert(a: String): Money {
+        if (a == "USD") {
+            if (this.currency == "GBP") {
+                return Money(this.amount * 2, "USD")
+            } else if (this.currency == "EUR") {
+                return Money(this.amount * 2 / 3, "USD")
+            } else if (this.currency == "CAN") {
+                return Money(this.amount * 4 / 5, "USD")
+            } else {
+                return Money(this.amount, "USD")
+            }
+        } else if (a == "GBP") {
+            if (this.currency == "USD") {
+                return Money(this.amount / 2, "GBP")
+            } else if (this.currency == "EUR") {
+                return Money(this.amount / 3, "GBP")
+            } else if (this.currency == "CAN") {
+                return Money(this.amount * 15 / 6, "GBP")
+            } else {
+                return Money(this.amount, "GBP")
+            }
+        } else if (a == "EUR") {
+            if (this.currency == "USD") {
+                return Money(this.amount * 3 / 2, "EUR")
+            } else if (this.currency == "CAN") {
+                return Money(this.amount * 6 / 5, "EUR") 
+            } else if (this.currency == "GBP") {
+                return Money(this.amount * 3, "EUR")
+            } else {
+                return Money(this.amount, "EUR")
+            }
+        } else {
+            if (this.currency =="USD") {
+                return Money(this.amount * 5 / 4, "CAN")
+            } else if (this.currency == "EUR") {
+                return Money(this.amount * 5 / 6, "CAN") 
+            } else if (this.currency == "GBP") {
+                return Money(this.amount * 6 / 15, "CAN")
+            } else {
+                return Money(this.amount, "CAN")
+            }
+        }
+    }
+
+    operator fun plus(other: Money): Money {
+        val convertedMoney = other.convert(this.currency).amount
+        val newMoney = this.amount + convertedMoney
+        return Money(newMoney, this.currency)
+    }
+}
 
 // ============ DO NOT EDIT BELOW THIS LINE =============
 
